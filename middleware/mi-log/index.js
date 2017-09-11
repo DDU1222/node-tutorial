@@ -14,9 +14,19 @@ const baseInfo = {
   filename: 'logs/task'
 }
 
+/**
+ * log 中间件主函数
+ * 
+ * @param {string} env - 环境变量
+ * @param {Object} options 
+ * @param {Object} options.projectName - 项目名称
+ * @param {Object} options.appLogLevel - app日志记录的日志级别
+ * @param {Object} options.serverIp - 当前服务器ip
+ * @returns 
+ */
 module.exports = (env, options) => {
   const contextLogger = {};
-  const opts = Object.assign({}, baseInfo, options)
+  const opts = Object.assign({}, baseInfo, options || {}) ;
   const {
     projectName,
     serverIp,
@@ -29,7 +39,7 @@ module.exports = (env, options) => {
 
   appenders.tasks = {
     type: 'dateFile',
-    filename: 'logs/task',
+    filename,
     pattern: '-yyyy-MM-dd.log',
     alwaysIncludePattern: true
   }
@@ -49,10 +59,8 @@ module.exports = (env, options) => {
       }
     }
   })
-  
   // 将log挂在上下文上
   return async (ctx, next) => {
-
     // level 以上级别的日志方法 
     methods.forEach((method, i) => {
       if (i >= currentLevel) {
