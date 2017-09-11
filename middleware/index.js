@@ -1,9 +1,10 @@
 const Router = require('koa-router')()
 const BodyParser = require('koa-bodyparser')
 const path = require("path")
-
+const ip = require("ip")
 const miInit = require('./mi-init')
 const miRender = require('./mi-render')
+const miLog = require('./mi-log')
 const miRouter = require('./mi-router')
 const miStaticFiles = require('./mi-static-files')
 const isProduction = process.env.NODE_ENV === 'production'
@@ -21,7 +22,14 @@ module.exports = (app) => {
     eT = new Date().getTime() - sT
     ctx.response.set('X-Response-Time', `${eT}ms`)
   })
-
+  /**
+   * 初始化log
+   */
+  app.use(miLog(app.env, {
+    projectName: 'node-tutorial',
+    appLogLevel: 'debug',
+    serverIp: ip.address()
+  }));
   /**
    * 初始化模板上下文 scope
    */

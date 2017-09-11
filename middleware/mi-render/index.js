@@ -113,6 +113,7 @@ module.exports = (options) => {
             }
             context.render = view.bind(context)
             context.say = "hello world"
+            context.log.warn('hahhahahahha');
             let koaRouter = context.routerInfo.filter((item) => {
                 return item.type === "koa"
             })[0]
