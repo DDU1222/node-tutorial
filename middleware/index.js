@@ -25,9 +25,12 @@ module.exports = (app) => {
   /**
    * 初始化log
    */
-  app.use(miLog(app.env, {
+  app.use(miLog({
+    env: app.env,
+    category: 'xxxxx',
     projectName: 'node-tutorial',
     appLogLevel: 'debug',
+    dir: 'logs',
     serverIp: ip.address()
   }));
   /**
