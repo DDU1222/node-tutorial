@@ -63,4 +63,18 @@ module.exports = (app) => {
     viewRootPath: path.resolve(__dirname, "../views")
   }))
   app.use(miRouter(require("../route")))
+  /**
+   * 监听错误事件
+   */
+  app.on('error', (err, ctx) => {
+    if (ctx) {
+      ctx.status = 500;
+    }
+    if (ctx && ctx.log && ctx.log.error) {
+      ctx.status = 500;
+      if (!ctx.state.logged) {
+          ctx.log.error(err.stack);
+      }
+    }
+  })
 }
