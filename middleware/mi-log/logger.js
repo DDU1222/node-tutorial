@@ -27,7 +27,8 @@ const baseInfo = {
  * @returns 
  */
 module.exports = (options) => {
-  const contextLogger = {};
+  let contextLogger = {};
+  let config = {};
   const opts = Object.assign({}, baseInfo, options || {}) ;
   const {
     projectName,
@@ -37,7 +38,6 @@ module.exports = (options) => {
     env,
     category
   } = opts;
-  const logger = log4js.getLogger(category);
   const currentLevel = methods.findIndex(ele => ele === appLogLevel)
   const appenders = {};
   const commonInfo = { projectName, serverIp };
@@ -55,7 +55,7 @@ module.exports = (options) => {
     }
   }
 
-  log4js.configure({
+  config = {
     appenders,
     categories: {
       default: {
@@ -63,9 +63,13 @@ module.exports = (options) => {
         level: appLogLevel
       }
     }
-  })
+  }
+  const logger = log4js.getLogger(category);
+
   // 将log挂在上下文上
   return async (ctx, next) => {
+
+    log4js.configure(config);
     // level 以上级别的日志方法
     methods.forEach((method, i) => {
       if (i >= currentLevel) {
